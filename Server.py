@@ -1,11 +1,13 @@
 import socket
 
+
+
 # Crear el socket del servidor
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Definir la IP y el puerto del servidor
 server_ip = '0.0.0.0'  
-server_port = 12345
+server_port = 12349
 
 # Vincular el socket a la dirección y puerto
 server_socket.bind((server_ip, server_port))
@@ -27,6 +29,7 @@ while True:
 
     # Enviar respuesta al cliente
     message = input("Servidor: ")
+    #agregar encriptacion
     client_socket.send(message.encode('utf-8'))
 
 # Cerrar la conexión
