@@ -4,7 +4,7 @@ from Crypto.Util.Padding import pad, unpad
 
 # Crear el socket del cliente
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect(('localhost', 12345))
+client_socket.connect(('localhost', 12349)) # Cambiar localhost a ip del servidor
 
 # Recibir la clave y el IV del servidor
 key_iv = client_socket.recv(1024)

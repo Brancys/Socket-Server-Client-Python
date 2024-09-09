@@ -14,7 +14,7 @@ server_socket.bind((server_ip, server_port))
 
 # Escuchar conexiones entrantes (máximo 5 en espera)
 server_socket.listen(5)
-print(f"Servidor escuchando en {server_ip}:{server_port}")
+print(f"Esperando conexión del cliente... {server_ip}:{server_port}")
 
 # Aceptar la conexión del cliente
 client_socket, client_address = server_socket.accept()
