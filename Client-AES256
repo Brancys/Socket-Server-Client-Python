@@ -1,0 +1,28 @@
+import socket
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+from Crypto.Random import get_random_bytes
+
+# Create a client socket
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect(('localhost', 12345))
+print('Connected to server')
+
+# Receive the IV and key from the server
+iv_key = client_socket.recv(AES.block_size + 32)
+iv = iv_key[:AES.block_size]
+key = iv_key[AES.block_size:]
+
+# Create the AES cipher object
+cipher = AES.new(key, AES.MODE_CBC, iv)
+
+# Encrypt the data
+data = input('Cliente: ')
+padded_data = pad(data, AES.block_size)
+encrypted_data = cipher.encrypt(padded_data)
+
+# Send the encrypted data to the server
+client_socket.send(encrypted_data)
+
+# Close the socket
+client_socket.close()
