@@ -5,7 +5,7 @@ client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Definir la IP y el puerto del servidor al que se va a conectar
 server_ip = '172.24.32.1'  # Cambiar por la IP del servidor
-server_port = 12345
+server_port = 12349
 
 # Conectar al servidor
 client_socket.connect((server_ip, server_port))

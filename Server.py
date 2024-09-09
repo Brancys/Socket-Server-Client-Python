@@ -26,6 +26,8 @@ while True:
     if not data:
         break
     print(f"Cliente: {data.decode('utf-8')}")
+    if data.decode('utf-8') == "bye":
+        break
 
     # Enviar respuesta al cliente
     message = input("Servidor: ")
