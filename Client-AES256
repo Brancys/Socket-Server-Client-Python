@@ -1,28 +1,43 @@
 import socket
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
-from Crypto.Random import get_random_bytes
 
-# Create a client socket
+# Crear el socket del cliente
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect(('localhost', 12345))
-print('Connected to server')
 
-# Receive the IV and key from the server
-iv_key = client_socket.recv(AES.block_size + 32)
-iv = iv_key[:AES.block_size]
-key = iv_key[AES.block_size:]
+# Recibir la clave y el IV del servidor
+key_iv = client_socket.recv(1024)
+iv = key_iv[:AES.block_size]  # El IV tiene el tamaño del bloque de AES
+key = key_iv[AES.block_size:]  # La clave ocupa el resto de los datos
 
-# Create the AES cipher object
-cipher = AES.new(key, AES.MODE_CBC, iv)
+# Comunicación cíclica con el servidor
+while True:
+    # Ingresar el mensaje que se va a enviar al servidor
+    message = input("Cliente (sin cifrar): ").encode()
 
-# Encrypt the data
-data = input('Cliente: ')
-padded_data = pad(data, AES.block_size)
-encrypted_data = cipher.encrypt(padded_data)
+    # Crear un nuevo cifrador AES con la clave y un nuevo IV
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    encrypted_message = cipher.encrypt(pad(message, AES.block_size))
 
-# Send the encrypted data to the server
-client_socket.send(encrypted_data)
+    # Enviar el mensaje cifrado al servidor
+    client_socket.send(encrypted_message)
 
-# Close the socket
+    # Recibir el IV y el mensaje cifrado del servidor
+    iv_encrypted_data = client_socket.recv(1024)
+    if not iv_encrypted_data:
+        break
+
+    # Separar el IV y los datos cifrados
+    iv = iv_encrypted_data[:AES.block_size]
+    encrypted_data = iv_encrypted_data[AES.block_size:]
+
+    # Crear un nuevo cifrador AES con la nueva clave y IV
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+
+    # Descifrar el mensaje
+    decrypted_message = unpad(cipher.decrypt(encrypted_data), AES.block_size)
+    print('Servidor (descifrado):', decrypted_message.decode())
+
+# Cerrar la conexión
 client_socket.close()
