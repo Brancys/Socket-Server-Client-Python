@@ -1,25 +1,22 @@
 import socket
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
+from Crypto.Cipher import Salsa20
 import os
 
 # Función para cifrar los datos
 def encrypt_salsa20(key, plaintext, nonce):
-    cipher = Cipher(algorithms.Salsa20(key, nonce), mode=None, backend=default_backend())
-    encryptor = cipher.encryptor()
-    ciphertext = encryptor.update(plaintext)
+    cipher = Salsa20.new(key=key, nonce=nonce)
+    ciphertext = cipher.encrypt(plaintext)
     return ciphertext
 
 # Función para descifrar los datos
 def decrypt_salsa20(key, ciphertext, nonce):
-    cipher = Cipher(algorithms.Salsa20(key, nonce), mode=None, backend=default_backend())
-    decryptor = cipher.decryptor()
-    plaintext = decryptor.update(ciphertext)
+    cipher = Salsa20.new(key=key, nonce=nonce)
+    plaintext = cipher.decrypt(ciphertext)
     return plaintext
 
 # Crear el socket del servidor
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_ip = '127.0.0.1'
+server_ip = '0.0.0.0'
 server_port = 12349
 
 server_socket.bind((server_ip, server_port))
@@ -47,7 +44,10 @@ while True:
     # Descifrar el mensaje recibido
     decrypted_message = decrypt_salsa20(key, data, nonce)
     print(f"Cliente (descifrado): {decrypted_message.decode('utf-8')}")
-
+    print(f"Cliente (encriptado): {data}")
+    if decrypted_message.decode('utf-8') == "bye":
+        break
+    
     # Enviar respuesta cifrada al cliente
     message = input("Servidor (sin cifrar): ").encode('utf-8')
     encrypted_message = encrypt_salsa20(key, message, nonce)
