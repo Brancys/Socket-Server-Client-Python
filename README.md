@@ -10,7 +10,7 @@ Este repositorio contiene un sistema básico de comunicación por sockets que pe
 
 - Python 3.7 o superior
 - Paquetes Python necesarios:
-  - `cryptography` (para la versión encriptada)
+  - `pycriptodome` (para la versión encriptada)
 
 ## Instalación
 
