@@ -10,11 +10,11 @@ Este repositorio contiene un sistema básico de comunicación por sockets que pe
 
 - Python 3.7 o superior
 - Paquetes Python necesarios:
-  - `pycriptodome` (para la versión encriptada)
+  - `pycryptodome` (para la versión encriptada)
 
 ## Instalación
 
 Para instalar las dependencias necesarias, ejecuta:
 
 ```bash
-pip install pycriptodome
+pip install pycryptodome
