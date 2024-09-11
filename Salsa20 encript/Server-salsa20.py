@@ -44,7 +44,7 @@ while True:
     # Descifrar el mensaje recibido
     decrypted_message = decrypt_salsa20(key, data, nonce)
     print(f"Cliente (descifrado): {decrypted_message.decode('utf-8')}")
-    print(f"Cliente (encriptado): {data}")
+    #print(f"Cliente (encriptado): {data}")
     if decrypted_message.decode('utf-8') == "bye":
         break
     
