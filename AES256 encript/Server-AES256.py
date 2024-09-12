@@ -5,7 +5,7 @@ from Crypto.Random import get_random_bytes
 
 # Crear el socket del servidor
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(('0.0.0.0', 12349))
+server_socket.bind(('0.0.0.0', 12349))  #10.20.6.104
 server_socket.listen(1)
 
 print('Esperando conexión del cliente...')

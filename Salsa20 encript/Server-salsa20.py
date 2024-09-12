@@ -34,6 +34,8 @@ nonce = os.urandom(8)  # Nonce de 8 bytes para Salsa20
 # Enviar la llave y el nonce al cliente
 client_socket.send(key + nonce)
 print("Llave simétrica y nonce enviados al cliente")
+print("key: ", key.hex())
+print("nonce: ", nonce.hex())
 
 # Recibir y enviar mensajes cifrados
 while True:
@@ -44,7 +46,7 @@ while True:
     # Descifrar el mensaje recibido
     decrypted_message = decrypt_salsa20(key, data, nonce)
     print(f"Cliente (descifrado): {decrypted_message.decode('utf-8')}")
-    #print(f"Cliente (encriptado): {data}")
+    print(f"Cliente (encriptado): {data.hex()}")
     if decrypted_message.decode('utf-8') == "bye":
         break
     
