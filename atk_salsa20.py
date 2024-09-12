@@ -11,4 +11,3 @@ msj = bytes.fromhex('9f97c895')
 
 decrypting = decrypt_salsa20(key, msj, nonce)
 print(decrypting)
-
