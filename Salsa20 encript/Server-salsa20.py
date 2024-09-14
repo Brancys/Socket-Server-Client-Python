@@ -33,9 +33,8 @@ key = os.urandom(32)  # Salsa20 requiere una llave de 32 bytes
 # Enviar la llave al cliente
 client_socket.send(key)
 print("Llave simétrica enviada al cliente")
-print("key: ", key.hex())
+#print("key: ", key.hex())
 
-# Recibir y enviar mensajes cifrados
 while True:
     # Recibir nonce + datos cifrados
     data = client_socket.recv(1024)
@@ -48,7 +47,7 @@ while True:
     # Descifrar el mensaje recibido
     decrypted_message = decrypt_salsa20(key, ciphertext, nonce)
     print(f"Cliente (descifrado): {decrypted_message.decode('utf-8')}")
-    print(f"Cliente (encriptado): {ciphertext.hex()}")
+    #print(f"Cliente (encriptado): {ciphertext.hex()}")
     
     if decrypted_message.decode('utf-8') == "bye":
         break

@@ -16,8 +16,8 @@ def decrypt_salsa20(key, ciphertext, nonce):
 
 # Crear el socket del cliente
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_ip = '10.20.6.104'  # IP del servidor
-server_port = 12349        # Puerto del servidor
+server_ip = '192.168.1.14'  # IP del servidor
+server_port = 12349        
 
 # Conectarse al servidor
 client_socket.connect((server_ip, server_port))
@@ -27,7 +27,7 @@ print(f"Conectado al servidor en {server_ip}:{server_port}")
 key = client_socket.recv(1024)
 
 print("Llave simétrica recibida")
-print("key: ", key.hex())
+#print("key: ", key.hex())
 
 while True:
     # Enviar mensaje cifrado al servidor
@@ -52,7 +52,7 @@ while True:
 
     decrypted_message = decrypt_salsa20(key, ciphertext, nonce)  # Descifrar el mensaje
     print(f"Servidor (descifrado): {decrypted_message.decode('utf-8')}")
-    print(f"Servidor (encriptado): {ciphertext.hex()}")
+    #print(f"Servidor (encriptado): {ciphertext.hex()}")
 
 # Cerrar la conexión
 client_socket.close()
