@@ -5,7 +5,7 @@ from Crypto.Random import get_random_bytes
 
 # Crear el socket del servidor
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(('192.168.1.7', 12349))
+server_socket.bind(('0.0.0.0', 12349))  #10.20.6.104
 server_socket.listen(1)
 
 print('Esperando conexión del cliente...')
@@ -15,6 +15,8 @@ print('Cliente conectado:', address)
 # Generar una clave AES de 256 bits y un IV
 key = get_random_bytes(32)  # 32 bytes para AES-256
 iv = get_random_bytes(AES.block_size)
+print('Clave:', key.hex())
+print('IV0:', iv.hex())
 
 # Enviar la clave y el IV al cliente
 client_socket.send(iv + key)
@@ -34,6 +36,7 @@ while True:
     decrypted_data = unpad(decrypted_data, AES.block_size)
     print("Cliente (cifrado):", encrypted_data)
     print('Cliente (descifrado):', decrypted_data.decode())
+    print('Cliente cifrado:', encrypted_data.hex())
     if decrypted_data == b'bye':
       break
 
@@ -42,6 +45,7 @@ while True:
 
     # Crear un nuevo cifrador AES con la misma clave y un nuevo IV
     iv = get_random_bytes(AES.block_size)  # Generar un nuevo IV para cada mensaje
+    print('IV:', iv)
     cipher = AES.new(key, AES.MODE_CBC, iv)
 
     # Cifrar el mensaje del servidor
