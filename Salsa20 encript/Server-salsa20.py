@@ -3,11 +3,10 @@ from Crypto.Cipher import Salsa20
 import os
 
 # Función para cifrar los datos
-def encrypt_salsa20(key, plaintext):
-    nonce = os.urandom(8)  # Generar un nuevo nonce para cada mensaje
+def encrypt_salsa20(key, plaintext, nonce):
     cipher = Salsa20.new(key=key, nonce=nonce)
     ciphertext = cipher.encrypt(plaintext)
-    return nonce, ciphertext
+    return ciphertext
 
 # Función para descifrar los datos
 def decrypt_salsa20(key, ciphertext, nonce):
@@ -56,7 +55,14 @@ while True:
     
     # Enviar respuesta cifrada al cliente
     message = input("Servidor (sin cifrar): ").encode('utf-8')
-    nonce, encrypted_message = encrypt_salsa20(key, message)
+    
+    # Generar un nuevo nonce justo antes de enviar el mensaje
+    nonce = os.urandom(8)
+    
+    # Cifrar el mensaje
+    encrypted_message = encrypt_salsa20(key, message, nonce)
+    
+    # Enviar el nonce junto con el mensaje cifrado
     client_socket.send(nonce + encrypted_message)
 
 # Cerrar la conexión
