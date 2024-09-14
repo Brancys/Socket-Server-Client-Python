@@ -38,7 +38,7 @@ while True:
 
     decrypted_message = decrypt_salsa20(key, data, nonce) # Descifrar el mensaje
     print(f"Servidor (descifrado): {decrypted_message.decode('utf-8')}")
-    #print(f"Servidor (encrypt): {data}")
+    print(f"Servidor (encrypt): {data}")
 
 # Cerrar la conexión
 client_socket.close()

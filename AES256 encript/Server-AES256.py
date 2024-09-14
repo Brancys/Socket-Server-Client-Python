@@ -5,7 +5,7 @@ from Crypto.Random import get_random_bytes
 
 # Crear el socket del servidor
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(('0.0.0.0', 12349))
+server_socket.bind(('192.168.1.7', 12349))
 server_socket.listen(1)
 
 print('Esperando conexión del cliente...')
@@ -32,6 +32,7 @@ while True:
     # Descifrar el mensaje recibido
     decrypted_data = cipher.decrypt(encrypted_data)
     decrypted_data = unpad(decrypted_data, AES.block_size)
+    print("Cliente (cifrado):", encrypted_data)
     print('Cliente (descifrado):', decrypted_data.decode())
     if decrypted_data == b'bye':
       break
