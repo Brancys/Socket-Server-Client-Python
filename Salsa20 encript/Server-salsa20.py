@@ -3,10 +3,11 @@ from Crypto.Cipher import Salsa20
 import os
 
 # Función para cifrar los datos
-def encrypt_salsa20(key, plaintext, nonce):
+def encrypt_salsa20(key, plaintext):
+    nonce = os.urandom(8)  # Generar un nuevo nonce para cada mensaje
     cipher = Salsa20.new(key=key, nonce=nonce)
     ciphertext = cipher.encrypt(plaintext)
-    return ciphertext
+    return nonce, ciphertext
 
 # Función para descifrar los datos
 def decrypt_salsa20(key, ciphertext, nonce):
@@ -27,33 +28,36 @@ print(f"Esperando conexión del cliente... {server_ip}:{server_port}")
 client_socket, client_address = server_socket.accept()
 print(f"Conexión aceptada de {client_address}")
 
-# Generar una llave simétrica de 256 bits y un nonce de 8 bytes
+# Generar una llave simétrica de 256 bits
 key = os.urandom(32)  # Salsa20 requiere una llave de 32 bytes
-nonce = os.urandom(8)  # Nonce de 8 bytes para Salsa20
 
-# Enviar la llave y el nonce al cliente
-client_socket.send(key + nonce)
-print("Llave simétrica y nonce enviados al cliente")
+# Enviar la llave al cliente
+client_socket.send(key)
+print("Llave simétrica enviada al cliente")
 print("key: ", key.hex())
-print("nonce: ", nonce.hex())
 
 # Recibir y enviar mensajes cifrados
 while True:
+    # Recibir nonce + datos cifrados
     data = client_socket.recv(1024)
     if not data:
         break
     
+    nonce = data[:8]  # Los primeros 8 bytes son el nonce
+    ciphertext = data[8:]  # El resto son los datos cifrados
+    
     # Descifrar el mensaje recibido
-    decrypted_message = decrypt_salsa20(key, data, nonce)
+    decrypted_message = decrypt_salsa20(key, ciphertext, nonce)
     print(f"Cliente (descifrado): {decrypted_message.decode('utf-8')}")
-    print(f"Cliente (encriptado): {data.hex()}")
+    print(f"Cliente (encriptado): {ciphertext.hex()}")
+    
     if decrypted_message.decode('utf-8') == "bye":
         break
     
     # Enviar respuesta cifrada al cliente
     message = input("Servidor (sin cifrar): ").encode('utf-8')
-    encrypted_message = encrypt_salsa20(key, message, nonce)
-    client_socket.send(encrypted_message)
+    nonce, encrypted_message = encrypt_salsa20(key, message)
+    client_socket.send(nonce + encrypted_message)
 
 # Cerrar la conexión
 client_socket.close()
